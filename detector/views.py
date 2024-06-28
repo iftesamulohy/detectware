@@ -53,7 +53,10 @@ class Index(TemplateView):
                         for antivirus, scan in report.get('scans', {}).items():
                             if scan.get('detected'):
                                 malware_name = scan.get('result')
-                                MalwareDetection.objects.create(file_name=uploaded_file.name, malware_name=malware_name,user=user)
+                                if request.user:
+                                    MalwareDetection.objects.create(file_name=uploaded_file.name, malware_name=malware_name,user=user)
+                                else:
+                                    MalwareDetection.objects.create(file_name=uploaded_file.name, malware_name=malware_name)
                                 message = f"Malware detected: {malware_name}"
                                 alert="danger"
                                 break
